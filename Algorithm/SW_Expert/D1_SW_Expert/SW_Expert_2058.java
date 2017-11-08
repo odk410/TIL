@@ -1,4 +1,4 @@
-package SW_Expert;
+package D1_SW_Expert;
 
 import java.util.Scanner;
 
