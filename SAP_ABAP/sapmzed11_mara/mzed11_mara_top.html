@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZED11_MARA_TOP</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZED11_MARA_TOP</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZED11_MARA_TOP</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include MZED11_MARA_TOP                                   Module Pool      SAPMZED11_MARA</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+PROGRAM SAPMZED11_MARA MESSAGE-ID oo.
+
+DATA : BEGIN OF gt_data OCCURS 0,
+MATNR  TYPE   MARA-MATNR,
+MAKTX  TYPE   MAKT-MAKTX,
+PSTAT  TYPE   MARA-PSTAT,
+MTART  TYPE   MARA-MTART,
+MATKL  TYPE   MARA-MATKL,
+WERKS  TYPE   MARC-WERKS,
+NAME1  TYPE   T001W-NAME1,
+MEINS  TYPE   MARA-MEINS,
+  END OF gt_data.
+
+
+
+DATA : gv_matnr LIKE mara-matnr.
+
+DATA : go_container TYPE REF TO cl_gui_custom_container,
+       go_grid      TYPE REF TO cl_gui_alv_grid,
+       gs_fcat      TYPE lvc_s_fcat,
+       gt_fcat      TYPE lvc_t_fcat,
+       gs_stable    TYPE lvc_s_stbl,
+       gs_layout    TYPE lvc_s_layo,
+       gs_variant   TYPE disvariant.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
+</font>
+</body>
+</html>
