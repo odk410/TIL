@@ -1,0 +1,304 @@
+*&---------------------------------------------------------------------*
+*& Report Z09_05
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT Z09_05.
+
+*DATA : gs_sflight TYPE sflight.
+*
+*clear : gs_sflight.
+*
+*Select SINGLE carrid connid fladte currency price
+*  INTO CORRESPONDING FIELDS OF gs_sflight
+*  FROM sflight
+* WHERE carrid = 'AA'
+*   AND connid = '17'
+*   AND fldate = '20150429'.
+*
+
+* 한 건만 불러와 필드에 넣어주기
+*
+*DATA : gv_price LIKE sflight-price.
+*
+*CLEAR : gv_price.
+*
+*SELECT SINGLE price
+*  INTO gv_price
+*  FROM sflight
+* WHERE carrid = 'AA'
+*   AND connid = '17'
+*   AND fldate = '20150429'.
+
+* 여러 필드, WORK AREA에 값넣기
+*DATA : gv_price LIKE sflight-price,
+*       gv_type LIKE sflight-planetype.
+*
+*DATA : gs_sflight TYPE sflight.
+*
+*CLEAR : gv_price, gv_type, gs_sflight.
+*
+*SELECT SINGLE price planetype currency
+*  INTO (gv_price, gv_type, gs_sflight-currency)
+*  FROM sflight
+* WHERE carrid = 'AA'
+*   AND connid = '17'
+*   AND fldate = '20150429'.
+
+
+*DATA : gv_price LIKE sflight-price,
+*       gv_type LIKE sflight-planetype,
+*       gv_cnt TYPE i.
+*
+*DATA : gs_sflight TYPE sflight.
+*
+*CLEAR : gv_price, gv_type, gs_sflight, gv_cnt.
+*
+*SELECT SINGLE carrid COUNT( * )
+*  INTO gv_cnt
+*  FROM sflight
+* WHERE carrid = 'AA'
+*   GROUP BY carrid.
+*
+
+*data : gt_scarr TYPE TABLE OF scarr WITH HEADER LINE,
+*       gt_spfl  TYPE TABLE OF spfli WITH HEADER LINE.
+*
+*CLEAR : gt_scarr, gt_scarr[], gt_spfl, gt_spfl[].
+*
+*DATA : BEGIN OF gt_cnt OCCURS 0,
+*        carrid LIKE sflight-carrid,
+*        cnt    TYPE i,
+*       END OF gt_cnt.
+*
+*CLEAR : gt_cnt, gt_cnt[].
+*
+*SELECT carrid COUNT( * ) AS cnt
+*  INTO CORRESPONDING FIELDS OF TABLE gt_cnt
+*  FROM sflight
+*  GROUP BY carrid.
+
+* MAX, MIN, COUNT
+*DATA : gv_maxprice LIKE sflight-price,
+*       gv_minprice LIKE sflight-price,
+*       gv_type LIKE sflight-planetype,
+*       gv_cnt TYPE i.
+*
+*DATA : gs_sflight TYPE sflight.
+*
+*CLEAR : gv_maxprice, gv_minprice, gv_type, gv_cnt, gs_sflight.
+*
+*Select MAX( price )
+*  INTO gv_maxprice
+*  FROM sflight.
+*
+*Select MIN( price )
+*  INTO gv_minprice
+*  FROM sflight.
+*
+*SELECT COUNT( * )
+*  INTO gv_cnt
+*  FROM sflight.
+*
+*
+*  WRITE : gv_maxprice, gv_minprice,gv_cnt.
+
+
+* 실습1
+DATA : BEGIN OF gt_data OCCURS 0.
+        INCLUDE STRUCTURE sbook.
+DATA :  bukrs LIKE t001-bukrs,
+        WERKS  LIKE T001W-WERKS,
+        MATNR  LIKE MARA-MATNR,
+        DMBTR  LIKE MSEG-DMBTR,
+        LGORT  LIKE MSEG-LGORT,
+        GUBUN(10),
+       END OF gt_data.
+
+
+DATA : gt_sflight TYPE TABLE OF sflight WITH HEADER LINE.
+
+DATA : gv_cnt TYPE i.
+
+CLEAR : gt_sflight, gt_sflight[], gv_cnt.
+
+SELECT carrid connid fldate planetype price
+  into CORRESPONDING FIELDS OF TABLE gt_sflight
+  FROM sflight.
+
+DO 500 TIMES.
+
+  WRITE : 'SY-TABIX : ', sy-tabix, 'SY-INDEX : ', sy-index.
+
+  READ TABLE gt_sflight INDEX sy-index.
+
+  WRITE : '읽은 후 : ', sy-tabix, 'SY-INDEX : ', sy-index, /.
+ENDDO.
+
+* CASE 문
+*DATA : gt_sflight TYPE TABLE OF sflight WITH HEADER LINE.
+*
+*DATA : gv_cnt_aa TYPE i,
+*       gv_cnt_az TYPE i,
+*       gv_cnt_etc TYPE i.
+*
+*CLEAR : gv_cnt_aa, gv_cnt_az, gv_cnt_etc, gt_sflight, gt_sflight[].
+*
+*SELECT carrid connid fldate planetype price
+*  into CORRESPONDING FIELDS OF TABLE gt_sflight
+*  FROM sflight.
+*
+*  LOOP AT gt_sflight.
+*
+*    CASE gt_sflight-carrid.
+*      WHEN 'AA'.
+*        gv_cnt_aa = gv_cnt_aa + 1.
+*      WHEN 'AZ'.
+*        gv_cnt_az = gv_cnt_az + 1.
+*      WHEN OTHERS.
+*        gv_cnt_etc = gv_cnt_etc + 1.
+*    ENDCASE.
+*
+*  ENDLOOP.
+*
+*  WRITE : 'AA : ',gv_cnt_aa, /,'AZ : ' ,gv_cnt_az, /,'ETC : ',gv_cnt_etc.
+
+*실습 2
+*DATA : gt_scarr TYPE TABLE OF scarr WITH HEADER LINE,
+*       gt_spfli TYPE TABLE OF spfli WITH HEADER LINE.
+*
+*CLEAR : gt_scarr, gt_scarr[], gt_spfli, gt_spfli[].
+*
+*SELECT carrid carrname currcode url
+*  INTO CORRESPONDING FIELDS OF TABLE gt_scarr
+*  FROM scarr.
+*
+*SELECT carrid connid countryfr cityfrom airpfrom countryto cityto airpto
+*       fltime deptime arrtime distance distid fltype period
+*  INTO CORRESPONDING FIELDS OF TABLE gt_spfli
+*  FROM spfli.
+*
+*
+*SORT gt_scarr BY carrid.
+*SORT gt_spfli BY carrid.
+*
+*
+*LOOP AT gt_scarr.
+*
+*  WRITE : gt_scarr-carrid,/, sy-uline.
+*
+*  READ TABLE gt_spfli WITH KEY carrid = gt_scarr-carrid
+*                     BINARY SEARCH.
+*
+*  LOOP AT gt_spfli FROM sy-tabix.
+*
+*    IF gt_scarr-carrid <> gt_spfli-carrid.
+*      EXIT.
+*    ENDIF.
+*
+*        WRITE : gt_spfli-carrid, gt_spfli-connid, gt_spfli-COUNTRYFR,/.
+*
+*  ENDLOOP.
+*
+*ENDLOOP.
+
+
+*실습 3
+
+*DATA : gt_mkpf LIKE TABLE OF mkpf WITH HEADER LINE,
+*       gt_mseg LIKE TABLE OF mseg WITH HEADER LINE.
+*
+*CLEAR : gt_mkpf, gt_mkpf[], gt_mseg, gt_mseg[].
+*
+*SELECT MBLNR VGART BLART
+*  INTO CORRESPONDING FIELDS OF TABLE gt_mkpf
+*  FROM mkpf
+* WHERE mjahr = '2016'.
+*
+*SELECT  MBLNR ZEILE BWART MATNR WERKS
+*  INTO CORRESPONDING FIELDS OF TABLE gt_mseg
+*  FROM MSEG
+* WHERE mjahr = '2016'.
+*
+*SORT gt_mkpf BY MBLNR.
+*SORT gt_mseg by MBLNR.
+*
+*LOOP AT gt_mkpf.
+*  WRITE : gt_mkpf-MBLNR,/,sy-uline.
+*
+*  READ TABLE gt_mseg WITH KEY MBLNR = gt_mkpf-mblnr
+*                     BINARY SEARCH.
+*
+*  IF sy-subrc = 0.
+*    LOOP AT gt_mseg FROM sy-tabix.
+*      IF  gt_mkpf-MBLNR <> gt_mseg-MBLNR.
+*        Exit.
+*      ENDIF.
+*
+*       WRITE : gt_mseg-MBLNR, gt_mseg-ZEILE, gt_mseg-BWART, gt_mseg-matnr,/.
+*    ENDLOOP.
+*  ENDIF.
+*
+*ENDLOOP.
+
+*TABLES : t001. "밑에서 사용할 TABLE에 대해서는 위에서 알려주어야 한다.
+*
+*SELECTION-SCREEN BEGIN OF BLOCK bl1 WITH FRAME TITLE text-001. "블록 생성
+*
+**  이름은 s_로 시작하는 이름과 8자리 이하로 정해야 한다.여기서는 LIKE, TYPE이 아닌 FOR를 사용한다.
+*  SELECT-OPTIONS : s_bukrs FOR t001-bukrs no INTERVALS.
+*
+*SELECTION-SCREEN END OF BLOCK bl1.
+*
+*SELECTION-SCREEN BEGIN OF BLOCK bl2 WITH FRAME TITLE text-002.
+*  SELECT-OPTIONS : s_ktopl for t001-ktopl no-EXTENSION no INTERVALS.
+*SELECTION-SCREEN END OF BLOCK bl2.
+
+
+
+* 실습 4
+*TABLES : sflight.
+*
+*SELECTION-SCREEN BEGIN OF BLOCK bl1 WITH FRAME TITLE text-003.
+*  SELECT-OPTIONS : s_carrid for sflight-carrid OBLIGATORY DEFAULT 'AA',
+*                   s_connid for sflight-connid no INTERVALS OBLIGATORY,
+*                   s_fldate for sflight-fldate no-EXTENSION,
+*                   s_curr   for sflight-currency no INTERVALS
+*                                                 no-EXTENSION.
+* SELECTION-SCREEN END OF BLOCK bl1.
+
+
+*TABLES : sflight.
+*
+*SELECTION-SCREEN BEGIN OF BLOCK bl1 WITH FRAME TITLE text-003.
+*  SELECT-OPTIONS : s_carrid for sflight-carrid ,
+*                   s_connid for sflight-connid .
+* SELECTION-SCREEN END OF BLOCK bl1.
+*
+*
+* DATA : gt_sflight TYPE TABLE OF sflight WITH HEADER LINE.
+*
+* CLEAR : gt_sflight, gt_sflight[].
+*
+* SELECT carrid connid fldate planetype currency price
+*   into CORRESPONDING FIELDS OF TABLE gt_sflight
+*   FROM sflight
+*  WHERE carrid IN s_carrid.
+*
+*   BREAK-POINT.
+
+*Text elements
+*----------------------------------------------------------
+* 001 검색조건
+* 003 검색옵션
+
+
+*Selection texts
+*----------------------------------------------------------
+* S_CARRID D       .
+* S_CONNID D       .
+* S_CURR D       .
+* S_FLDATE D       .
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750

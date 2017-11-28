@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Z09_04</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: Z09_04</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Report Z09_04</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Report Z09_04</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+REPORT Z09_04.
+
+<font color ="#0000FF">*Header가 없는 ITAB</font>
+<font color ="#0000FF">* 실습 1</font>
+<font color ="#0000FF">*DATA : gt_sflight LIKE TABLE OF sflight WITH HEADER LINE.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_sflight, gt_sflight[].</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT CARRID CONNID FLDATE PRICE CURRENCY PLANETYPE</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_sflight</font>
+<font color ="#0000FF">*  FROM sflight.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*LOOP AT gt_sflight.</font>
+<font color ="#0000FF">*  gt_sflight-currency = 'KRW'.</font>
+<font color ="#0000FF">*  MODIFY gt_sflight INDEX sy-tabix TRANSPORTING currency.</font>
+<font color ="#0000FF">*ENDLOOP.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*LOOP AT gt_sflight.</font>
+<font color ="#0000FF">*  WRITE : gt_sflight-CARRID, gt_sflight-CONNID, gt_sflight-FLDATE,</font>
+<font color ="#0000FF">*          gt_sflight-PRICE, gt_sflight-CURRENCY, gt_sflight-PLANETYPE,/.</font>
+<font color ="#0000FF">*ENDLOOP.</font>
+
+
+<font color ="#0000FF">* 실습 2</font>
+
+<font color ="#0000FF">*DATA : gt_mara LIKE TABLE OF mara WITH HEADER LINE,</font>
+<font color ="#0000FF">*       gt_makt LIKE TABLE OF makt WITH HEADER LINE.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_mara, gt_mara[], gt_makt, gt_makt[].</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT MATNR MTART MATKL MEINS</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_mara</font>
+<font color ="#0000FF">*  FROM mara.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT MATNR SPRAS MAKTX MAKTG</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_makt</font>
+<font color ="#0000FF">*  FROM makt</font>
+<font color ="#0000FF">*  WHERE SPRAS ='3'.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*LOOP AT gt_mara.</font>
+<font color ="#0000FF">*  READ TABLE gt_makt WITH KEY matnr = gt_mara-matnr.</font>
+<font color ="#0000FF">*  IF sy-subrc = 0 .</font>
+<font color ="#0000FF">*     WRITE : gt_mara-MATNR, gt_mara-MTART, gt_mara-matkl, gt_mara-meins,</font>
+<font color ="#0000FF">*          gt_makt-SPRAS, gt_makt-MAKTX, gt_makt-MAKTG,/.</font>
+<font color ="#0000FF">*  ENDIF.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*ENDLOOP.</font>
+
+
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DATA : BEGIN OF  gt_data OCCURS 0,</font>
+<font color ="#0000FF">*        matnr LIKE mara-matnr,</font>
+<font color ="#0000FF">*        mtart LIKE mara-mtart,</font>
+<font color ="#0000FF">*        matkl LIKE mara-matkl,</font>
+<font color ="#0000FF">*        meins LIKE mara-meins,</font>
+<font color ="#0000FF">*        maktx LIKE makt-maktx,</font>
+<font color ="#0000FF">*       END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DATA : gt_mara LIKE TABLE OF mara WITH HEADER LINE,</font>
+<font color ="#0000FF">*       gt_makt LIKE TABLE OF makt WITH HEADER LINE.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_data, gt_data[], gt_mara, gt_mara[], gt_makt, gt_makt[].</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT matnr mtart matkl meins</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_mara</font>
+<font color ="#0000FF">*  FROM mara.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT matnr SPRAS maktx maktg</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_makt</font>
+<font color ="#0000FF">*  FROM makt</font>
+<font color ="#0000FF">* WHERE SPRAS = '3'.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  LOOP AT gt_mara.</font>
+<font color ="#0000FF">*    gt_data-matnr = gt_mara-matnr.</font>
+<font color ="#0000FF">*    gt_data-mtart = gt_mara-mtart.</font>
+<font color ="#0000FF">*    gt_data-matkl = gt_mara-matkl.</font>
+<font color ="#0000FF">*    gt_data-meins = gt_mara-meins.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*    READ TABLE gt_makt WITH KEY matnr = gt_mara-matnr.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*    IF sy-subrc = 0.</font>
+<font color ="#0000FF">*      gt_data-maktx = gt_makt-maktx.</font>
+<font color ="#0000FF">*    ENDIF.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*    Append gt_data.</font>
+<font color ="#0000FF">*    CLEAR : gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  ENDLOOP.</font>
+
+
+<font color ="#0000FF">* 실습 3</font>
+
+<font color ="#0000FF">*DATA : BEGIN OF gt_data OCCURS 0,</font>
+<font color ="#0000FF">*        MBLNR like  MKPF-MBLNR,</font>
+<font color ="#0000FF">*        ZEILE like  MSEG-ZEILE,</font>
+<font color ="#0000FF">*        MJAHR like  MKPF-MJAHR,</font>
+<font color ="#0000FF">*        VGART like  MKPF-VGART,</font>
+<font color ="#0000FF">*        BLART like  MKPF-BLART,</font>
+<font color ="#0000FF">*        BWART like  MSEG-BWART,</font>
+<font color ="#0000FF">*        MATNR like  MSEG-MATNR,</font>
+<font color ="#0000FF">*        WERKS like  MSEG-WERKS,</font>
+<font color ="#0000FF">*        LGORT like  MSEG-LGORT,</font>
+<font color ="#0000FF">*       END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DATA : gt_mkpf LIKE TABLE OF mkpf WITH HEADER LINE,</font>
+<font color ="#0000FF">*       gt_mseg LIKE TABLE OF MSEG WITH HEADER LINE.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_data, gt_data[], gt_mkpf, gt_mkpf[], gt_mseg, gt_mseg[].</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT MBLNR MJAHR VGART BLART</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_mkpf</font>
+<font color ="#0000FF">*  FROM mkpf</font>
+<font color ="#0000FF">* WHERE MJAHR = '2016'.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT MBLNR ZEILE BWART MATNR WERKS LGORT</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_mseg</font>
+<font color ="#0000FF">*  FROM mseg</font>
+<font color ="#0000FF">* WHERE MJAHR = '2016'</font>
+<font color ="#0000FF">*   AND ZEILE ='1'.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*LOOP AT gt_mkpf.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  READ TABLE gt_mseg WITH KEY mblnr = gt_mkpf-mblnr.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  IF sy-subrc = 0.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*     MOVE-CORRESPONDING gt_mkpf To  gt_data.</font>
+<font color ="#0000FF">*     MOVE-CORRESPONDING gt_mseg TO  gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*     APPEND gt_data.</font>
+<font color ="#0000FF">*     CLEAR gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  ENDIF.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*ENDLOOP.</font>
+
+
+<font color ="#0000FF">* Collect</font>
+<font color ="#0000FF">*DATA : BEGIN OF gt_data OCCURS 0,</font>
+<font color ="#0000FF">*        name(10),</font>
+<font color ="#0000FF">*        sum1 TYPE i,</font>
+<font color ="#0000FF">*        sum2 TYPE n,</font>
+<font color ="#0000FF">*        sum3 TYPE p,</font>
+<font color ="#0000FF">*       END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*gt_data-name = '홍길동'.</font>
+<font color ="#0000FF">*gt_data-sum1 = 1.</font>
+<font color ="#0000FF">*gt_data-sum2 = 1.</font>
+<font color ="#0000FF">*gt_data-sum3 = 1.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*COLLECT gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*gt_data-name = '홍길동'.</font>
+<font color ="#0000FF">*gt_data-sum1 = 1.</font>
+<font color ="#0000FF">*gt_data-sum2 = 1.</font>
+<font color ="#0000FF">*gt_data-sum3 = 1.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*COLLECT gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*gt_data-name = '홍길동'.</font>
+<font color ="#0000FF">*gt_data-sum1 = 2.</font>
+<font color ="#0000FF">*gt_data-sum2 = 2.</font>
+<font color ="#0000FF">*gt_data-sum3 = 1.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*COLLECT gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*gt_data-name = '아무개'.</font>
+<font color ="#0000FF">*gt_data-sum1 = 1.</font>
+<font color ="#0000FF">*gt_data-sum2 = 1.</font>
+<font color ="#0000FF">*gt_data-sum3 = 1.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*COLLECT gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DATA : BEGIN OF gt_data OCCURS 0,</font>
+<font color ="#0000FF">*        carrid LIKE sflight-carrid,</font>
+<font color ="#0000FF">*        connid LIKE sflight-connid,</font>
+<font color ="#0000FF">*        price LIKE sflight-price,</font>
+<font color ="#0000FF">*       END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DATA : gt_sflight TYPE TABLE OF sflight WITH HEADER LINE.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_data, gt_data[], gt_sflight, gt_sflight[].</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT carrid connid fldate price</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_sflight</font>
+<font color ="#0000FF">*  FROM sflight.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*LOOP AT gt_sflight.</font>
+<font color ="#0000FF">*  MOVE-CORRESPONDING gt_sflight To  gt_data.</font>
+<font color ="#0000FF">*  COLLECT gt_data.</font>
+<font color ="#0000FF">*  CLEAR : gt_data.</font>
+<font color ="#0000FF">*ENDLOOP.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SORT gt_data BY carrid connid.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*delete ADJACENT DUPLICATES FROM gt_data COMPARING carrid.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DELETE gt_data WHERE carrid = 'AA'</font>
+<font color ="#0000FF">*                        AND (connid = '64' OR connid = '17').</font>
+
+<font color ="#0000FF">*SORT gt_data by connid.</font>
+
+<font color ="#0000FF">*SORT gt_data by carrid connid DESCENDING.</font>
+
+
+<font color ="#0000FF">* Join하기</font>
+<font color ="#0000FF">*DATA : BEGIN OF gt_data OCCURS 0,</font>
+<font color ="#0000FF">*        carrid LIKE sflight-carrid,</font>
+<font color ="#0000FF">*        connid LIKE sflight-connid,</font>
+<font color ="#0000FF">*        fldate LIKE sflight-fldate,</font>
+<font color ="#0000FF">*        price LIKE sflight-price,</font>
+<font color ="#0000FF">*        bookid LIKE sbook-bookid,</font>
+<font color ="#0000FF">*        customid LIKE sbook-customid,</font>
+<font color ="#0000FF">*        custtype LIKE sbook-custtype,</font>
+<font color ="#0000FF">*       END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_data, gt_data[].</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SELECT a~carrid a~connid a~fldate a~price b~bookid</font>
+<font color ="#0000FF">*       b~customid b~custtype</font>
+<font color ="#0000FF">*  INTO CORRESPONDING FIELDS OF TABLE gt_data</font>
+<font color ="#0000FF">*  FROM sflight AS a</font>
+<font color ="#0000FF">*  INNER JOIN sbook AS b</font>
+<font color ="#0000FF">*    ON a~carrid = b~carrid</font>
+<font color ="#0000FF">*   AND a~connid = b~connid</font>
+<font color ="#0000FF">*   AND a~fldate = b~fldate</font>
+<font color ="#0000FF">* WHERE a~carrid = 'AA'</font>
+<font color ="#0000FF">* Order by a~fldate.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*SORT gt_dat BY carrid connid.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*READ TABLE gt_data WITH KEY carrid = 'AA'</font>
+<font color ="#0000FF">*                              connid = '64'</font>
+<font color ="#0000FF">*                     BINARY SEARCH.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*WRITE : sy-subrc.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*BREAK-POINT.</font>
+
+<font color ="#0000FF">*DATA : BEGIN OF gt_data OCCURS 0.</font>
+<font color ="#0000FF">*        INCLUDE STRUCTURE sflight.</font>
+<font color ="#0000FF">*DATA : bookid LIKE sbook-bookid,</font>
+<font color ="#0000FF">*       customid LIKE sbook-customid,</font>
+<font color ="#0000FF">*       custtype LIKE sbook-custtype,</font>
+<font color ="#0000FF">*      END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*DATA : BEGIN OF gt_data OCCURS 0,</font>
+<font color ="#0000FF">*        bookid LIKE sbook-bookid,</font>
+<font color ="#0000FF">*        customid LIKE sbook-customid,</font>
+<font color ="#0000FF">*        custtype LIKE sbook-custtype.</font>
+<font color ="#0000FF">*        INCLUDE STRUCTURE sflight.</font>
+<font color ="#0000FF">*DATA : END OF gt_data.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*CLEAR : gt_data,</font>
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
+</font>
+</body>
+</html>

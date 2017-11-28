@@ -1,0 +1,266 @@
+*&---------------------------------------------------------------------*
+*& Report Z09_04
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT Z09_04.
+
+*Header가 없는 ITAB
+* 실습 1
+*DATA : gt_sflight LIKE TABLE OF sflight WITH HEADER LINE.
+*
+*CLEAR : gt_sflight, gt_sflight[].
+*
+*SELECT CARRID CONNID FLDATE PRICE CURRENCY PLANETYPE
+*  INTO CORRESPONDING FIELDS OF TABLE gt_sflight
+*  FROM sflight.
+*
+*LOOP AT gt_sflight.
+*  gt_sflight-currency = 'KRW'.
+*  MODIFY gt_sflight INDEX sy-tabix TRANSPORTING currency.
+*ENDLOOP.
+*
+*LOOP AT gt_sflight.
+*  WRITE : gt_sflight-CARRID, gt_sflight-CONNID, gt_sflight-FLDATE,
+*          gt_sflight-PRICE, gt_sflight-CURRENCY, gt_sflight-PLANETYPE,/.
+*ENDLOOP.
+
+
+* 실습 2
+
+*DATA : gt_mara LIKE TABLE OF mara WITH HEADER LINE,
+*       gt_makt LIKE TABLE OF makt WITH HEADER LINE.
+*
+*CLEAR : gt_mara, gt_mara[], gt_makt, gt_makt[].
+*
+*SELECT MATNR MTART MATKL MEINS
+*  INTO CORRESPONDING FIELDS OF TABLE gt_mara
+*  FROM mara.
+*
+*SELECT MATNR SPRAS MAKTX MAKTG
+*  INTO CORRESPONDING FIELDS OF TABLE gt_makt
+*  FROM makt
+*  WHERE SPRAS ='3'.
+*
+*LOOP AT gt_mara.
+*  READ TABLE gt_makt WITH KEY matnr = gt_mara-matnr.
+*  IF sy-subrc = 0 .
+*     WRITE : gt_mara-MATNR, gt_mara-MTART, gt_mara-matkl, gt_mara-meins,
+*          gt_makt-SPRAS, gt_makt-MAKTX, gt_makt-MAKTG,/.
+*  ENDIF.
+*
+*ENDLOOP.
+
+
+*
+*DATA : BEGIN OF  gt_data OCCURS 0,
+*        matnr LIKE mara-matnr,
+*        mtart LIKE mara-mtart,
+*        matkl LIKE mara-matkl,
+*        meins LIKE mara-meins,
+*        maktx LIKE makt-maktx,
+*       END OF gt_data.
+*
+*
+*DATA : gt_mara LIKE TABLE OF mara WITH HEADER LINE,
+*       gt_makt LIKE TABLE OF makt WITH HEADER LINE.
+*
+*CLEAR : gt_data, gt_data[], gt_mara, gt_mara[], gt_makt, gt_makt[].
+*
+*SELECT matnr mtart matkl meins
+*  INTO CORRESPONDING FIELDS OF TABLE gt_mara
+*  FROM mara.
+*
+*SELECT matnr SPRAS maktx maktg
+*  INTO CORRESPONDING FIELDS OF TABLE gt_makt
+*  FROM makt
+* WHERE SPRAS = '3'.
+*
+*  LOOP AT gt_mara.
+*    gt_data-matnr = gt_mara-matnr.
+*    gt_data-mtart = gt_mara-mtart.
+*    gt_data-matkl = gt_mara-matkl.
+*    gt_data-meins = gt_mara-meins.
+*
+*    READ TABLE gt_makt WITH KEY matnr = gt_mara-matnr.
+*
+*    IF sy-subrc = 0.
+*      gt_data-maktx = gt_makt-maktx.
+*    ENDIF.
+*
+*    Append gt_data.
+*    CLEAR : gt_data.
+*
+*  ENDLOOP.
+
+
+* 실습 3
+
+*DATA : BEGIN OF gt_data OCCURS 0,
+*        MBLNR like  MKPF-MBLNR,
+*        ZEILE like  MSEG-ZEILE,
+*        MJAHR like  MKPF-MJAHR,
+*        VGART like  MKPF-VGART,
+*        BLART like  MKPF-BLART,
+*        BWART like  MSEG-BWART,
+*        MATNR like  MSEG-MATNR,
+*        WERKS like  MSEG-WERKS,
+*        LGORT like  MSEG-LGORT,
+*       END OF gt_data.
+*
+*DATA : gt_mkpf LIKE TABLE OF mkpf WITH HEADER LINE,
+*       gt_mseg LIKE TABLE OF MSEG WITH HEADER LINE.
+*
+*CLEAR : gt_data, gt_data[], gt_mkpf, gt_mkpf[], gt_mseg, gt_mseg[].
+*
+*SELECT MBLNR MJAHR VGART BLART
+*  INTO CORRESPONDING FIELDS OF TABLE gt_mkpf
+*  FROM mkpf
+* WHERE MJAHR = '2016'.
+*
+*SELECT MBLNR ZEILE BWART MATNR WERKS LGORT
+*  INTO CORRESPONDING FIELDS OF TABLE gt_mseg
+*  FROM mseg
+* WHERE MJAHR = '2016'
+*   AND ZEILE ='1'.
+*
+*LOOP AT gt_mkpf.
+*
+*  READ TABLE gt_mseg WITH KEY mblnr = gt_mkpf-mblnr.
+*
+*  IF sy-subrc = 0.
+*
+*     MOVE-CORRESPONDING gt_mkpf To  gt_data.
+*     MOVE-CORRESPONDING gt_mseg TO  gt_data.
+*
+*     APPEND gt_data.
+*     CLEAR gt_data.
+*
+*  ENDIF.
+*
+*ENDLOOP.
+
+
+* Collect
+*DATA : BEGIN OF gt_data OCCURS 0,
+*        name(10),
+*        sum1 TYPE i,
+*        sum2 TYPE n,
+*        sum3 TYPE p,
+*       END OF gt_data.
+*
+*gt_data-name = '홍길동'.
+*gt_data-sum1 = 1.
+*gt_data-sum2 = 1.
+*gt_data-sum3 = 1.
+*
+*COLLECT gt_data.
+*
+*gt_data-name = '홍길동'.
+*gt_data-sum1 = 1.
+*gt_data-sum2 = 1.
+*gt_data-sum3 = 1.
+*
+*COLLECT gt_data.
+*
+*gt_data-name = '홍길동'.
+*gt_data-sum1 = 2.
+*gt_data-sum2 = 2.
+*gt_data-sum3 = 1.
+*
+*COLLECT gt_data.
+*
+*gt_data-name = '아무개'.
+*gt_data-sum1 = 1.
+*gt_data-sum2 = 1.
+*gt_data-sum3 = 1.
+*
+*COLLECT gt_data.
+*
+*
+*DATA : BEGIN OF gt_data OCCURS 0,
+*        carrid LIKE sflight-carrid,
+*        connid LIKE sflight-connid,
+*        price LIKE sflight-price,
+*       END OF gt_data.
+*
+*DATA : gt_sflight TYPE TABLE OF sflight WITH HEADER LINE.
+*
+*CLEAR : gt_data, gt_data[], gt_sflight, gt_sflight[].
+*
+*SELECT carrid connid fldate price
+*  INTO CORRESPONDING FIELDS OF TABLE gt_sflight
+*  FROM sflight.
+*
+*LOOP AT gt_sflight.
+*  MOVE-CORRESPONDING gt_sflight To  gt_data.
+*  COLLECT gt_data.
+*  CLEAR : gt_data.
+*ENDLOOP.
+*
+*SORT gt_data BY carrid connid.
+*
+*delete ADJACENT DUPLICATES FROM gt_data COMPARING carrid.
+*
+*DELETE gt_data WHERE carrid = 'AA'
+*                        AND (connid = '64' OR connid = '17').
+
+*SORT gt_data by connid.
+
+*SORT gt_data by carrid connid DESCENDING.
+
+
+* Join하기
+*DATA : BEGIN OF gt_data OCCURS 0,
+*        carrid LIKE sflight-carrid,
+*        connid LIKE sflight-connid,
+*        fldate LIKE sflight-fldate,
+*        price LIKE sflight-price,
+*        bookid LIKE sbook-bookid,
+*        customid LIKE sbook-customid,
+*        custtype LIKE sbook-custtype,
+*       END OF gt_data.
+*
+*CLEAR : gt_data, gt_data[].
+*
+*SELECT a~carrid a~connid a~fldate a~price b~bookid
+*       b~customid b~custtype
+*  INTO CORRESPONDING FIELDS OF TABLE gt_data
+*  FROM sflight AS a
+*  INNER JOIN sbook AS b
+*    ON a~carrid = b~carrid
+*   AND a~connid = b~connid
+*   AND a~fldate = b~fldate
+* WHERE a~carrid = 'AA'
+* Order by a~fldate.
+*
+*SORT gt_dat BY carrid connid.
+*
+*READ TABLE gt_data WITH KEY carrid = 'AA'
+*                              connid = '64'
+*                     BINARY SEARCH.
+*
+*WRITE : sy-subrc.
+*
+*BREAK-POINT.
+
+*DATA : BEGIN OF gt_data OCCURS 0.
+*        INCLUDE STRUCTURE sflight.
+*DATA : bookid LIKE sbook-bookid,
+*       customid LIKE sbook-customid,
+*       custtype LIKE sbook-custtype,
+*      END OF gt_data.
+*
+*DATA : BEGIN OF gt_data OCCURS 0,
+*        bookid LIKE sbook-bookid,
+*        customid LIKE sbook-customid,
+*        custtype LIKE sbook-custtype.
+*        INCLUDE STRUCTURE sflight.
+*DATA : END OF gt_data.
+*
+*
+*
+*CLEAR : gt_data,
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
