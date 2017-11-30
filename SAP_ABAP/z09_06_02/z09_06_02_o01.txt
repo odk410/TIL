@@ -1,0 +1,62 @@
+*&---------------------------------------------------------------------*
+*&  Include           Z09_06_02_O01
+*&---------------------------------------------------------------------*
+*&---------------------------------------------------------------------*
+*&      Module  STATUS_0100  OUTPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+MODULE status_0100 OUTPUT.
+  SET PF-STATUS '0100'. "스크린 번호랑 동일하게
+  SET TITLEBAR '0100'.  "스크린 번호랑 동일하게
+ENDMODULE.
+*&---------------------------------------------------------------------*
+*&      Module  DISPLAY_SCREEN  OUTPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+MODULE display_screen OUTPUT.
+  CREATE OBJECT go_container
+    EXPORTING
+      container_name = 'GO_CONTAINER'.  "TOP에서 만든 Container
+
+  CREATE OBJECT go_grid
+    EXPORTING
+      i_parent = go_container.  "어디에 grid를 붙일 것인지.
+
+CALL METHOD go_grid->set_table_for_first_display
+   EXPORTING
+*    i_buffer_active               =
+*    i_bypassing_buffer            =
+*    i_consistency_check           =
+    i_structure_name              = 'SFLIGHT'    "보여 줄 것이면 어떤 식으로 보여줄 것인지. ITAB을 SFLIGFHT와 같게 보여달라
+*    is_variant                    =
+*    i_save                        =
+*    i_default                     = 'X'
+*    is_layout                     =
+*    is_print                      =
+*    it_special_groups             =
+*    it_toolbar_excluding          =
+*    it_hyperlink                  =
+*    it_alv_graphics               =
+*    it_except_qinfo               =
+*    ir_salv_adapter               =
+  CHANGING
+    it_outtab                     = gt_sflight[]  "몸통만 받을 수 있다. 헤더가 있는 ITAB인 경우 []를 붙이고 헤더가 없는 ITAB인 경우 그냥 쓴다.
+*    it_fieldcatalog               =
+*    it_sort                       =
+*    it_filter                     =
+*  EXCEPTIONS
+*    invalid_parameter_combination = 1
+*    program_error                 = 2
+*    too_many_lines                = 3
+*    others                        = 4
+        .
+IF sy-subrc <> 0.
+* Implement suitable error handling here
+ENDIF.
+
+ENDMODULE.
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750

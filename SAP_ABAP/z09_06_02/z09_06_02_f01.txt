@@ -1,0 +1,29 @@
+*&---------------------------------------------------------------------*
+*&  Include           Z09_06_02_F01
+*&---------------------------------------------------------------------*
+*&---------------------------------------------------------------------*
+*&      Form  GET_DATA
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+FORM GET_DATA .
+  CLEAR : gt_sflight, gt_sflight[].
+
+  SELECT CARRID CONNID FLDATE PRICE CURRENCY PLANETYPE SEATSMAX SEATSOCC PAYMENTSUM
+         SEATSMAX_B SEATSOCC_B SEATSMAX_F SEATSOCC_F
+    INTO CORRESPONDING FIELDS OF TABLE gt_sflight
+    FROM sflight
+    WHERE carrid IN s_carrid.
+
+    IF sy-subrc NE 0.
+      MESSAGE 'Data not found' TYPE 'S'.  "데이터가 없을 경우 메시지를 출력한다.
+      LEAVE LIST-PROCESSING. "메시지를 뿌리고 더 이상 작업을 하지 않는다.
+    ENDIF.
+
+ENDFORM.
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
