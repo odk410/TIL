@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Z09_07_02_TOP</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: Z09_07_02_TOP</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include Z09_07_02_TOP</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include Z09_07_02_TOP                                     Report Z09_07_02</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+REPORT Z09_07_02.
+
+DATA : gt_sflight TYPE TABLE OF sflight WITH HEADER LINE.
+
+TABLES : sflight.
+
+DATA : go_container TYPE REF TO cl_gui_custom_container,
+       go_grid      TYPE REF TO cl_gui_alv_grid,
+       gs_fcat      TYPE lvc_s_fcat,     "field catalog를 설정
+       gt_fcat      TYPE lvc_t_fcat,    "field catalog를 설정
+       gs_layout    TYPE lvc_s_layo,    "layout 설정
+       gs_variant   TYPE disvariant.    "layout을 저장하는 기능
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
+</font>
+</body>
+</html>
