@@ -1,0 +1,30 @@
+*&---------------------------------------------------------------------*
+*& Include Z09_07_PRACTICE2_TOP                              Report Z09_07_PRACTICE2
+*&
+*&---------------------------------------------------------------------*
+REPORT Z09_07_PRACTICE2.
+
+DATA : BEGIN OF gt_data OCCURS 0,
+          MJAHR LIKE MKPF-MJAHR,
+          MBLNR LIKE MKPF-MBLNR,
+          ZEILE LIKE MSEG-ZEILE,
+          BLART LIKE MKPF-BLART,
+          BUDAT LIKE MKPF-BUDAT,
+          MATNR LIKE MSEG-MATNR,
+          WERKS LIKE MSEG-WERKS,
+          DMBTR LIKE MSEG-DMBTR,
+          WAERS LIKE MSEG-WAERS,
+          MENGE LIKE MSEG-MENGE,
+          MEINS LIKE MSEG-MEINS,
+  END OF gt_data.
+
+TABLES : mkpf.
+
+DATA : go_container TYPE REF TO cl_gui_custom_container,
+       go_grid      TYPE REF TO cl_gui_alv_grid,
+       gs_fcat      TYPE lvc_s_fcat,
+       gt_fcat      TYPE lvc_t_fcat,
+       gs_layout    TYPE lvc_s_layo.
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750

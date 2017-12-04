@@ -1,0 +1,43 @@
+*&---------------------------------------------------------------------*
+*& Report  Z09_07_PRACTICE2
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+INCLUDE Z09_07_PRACTICE2_TOP                    .    " global Data
+
+ INCLUDE Z09_07_PRACTICE2_scr                    .  " Select Screen
+ INCLUDE Z09_07_PRACTICE2_O01                    .  " PBO-Modules
+ INCLUDE Z09_07_PRACTICE2_I01                    .  " PAI-Modules
+ INCLUDE Z09_07_PRACTICE2_F01                    .  " FORM-Routines
+
+ START-OF-SELECTION.
+  PERFORM get_data.
+
+  CALL SCREEN '0100'.
+
+*GUI Texts
+*----------------------------------------------------------
+* 0100 --> 연습
+
+*Text elements
+*----------------------------------------------------------
+* 001
+
+
+*Selection texts
+*----------------------------------------------------------
+* P_MJAHR D       .
+* S_MBLNR D       .
+
+
+*Messages
+*----------------------------------------------------------
+*
+* Message class: Hard coded
+*   Data not found
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
