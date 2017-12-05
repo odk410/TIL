@@ -1,0 +1,35 @@
+*&---------------------------------------------------------------------*
+*& Include Z09_08_PRACTICE1_TOP                              Report Z09_08_PRACTICE1
+*&
+*&---------------------------------------------------------------------*
+REPORT Z09_08_PRACTICE1.
+
+DATA : BEGIN OF gt_data OCCURS 0,
+        EBELN LIKE  EKKO-EBELN,
+        EBELP LIKE  EKPO-EBELP,
+        BUKRS LIKE  EKKO-BUKRS,
+        BSART LIKE  EKKO-BSART,
+        MATNR LIKE  EKPO-MATNR,
+        MAKTX LIKE  MAKT-MAKTX,
+        MATKL LIKE  EKPO-MATKL,
+        MENGE LIKE 	EKPO-MENGE,
+        MEINS LIKE  EKPO-MEINS,
+        NETWR LIKE  EKPO-NETWR,
+        WAERS TYPE  waers,
+        color(4),
+        cell_color  TYPE lvc_t_scol,
+  END OF gt_data.
+
+*DATA : go_container TYPE REF TO cl_gui_custom_container,
+DATA : go_container TYPE REF TO cl_gui_docking_container,
+       go_grid      TYPE REF TO cl_gui_alv_grid,
+       gs_fcat      TYPE lvc_s_fcat,
+       gt_fcat      TYPE lvc_t_fcat,
+       gs_variant   TYPE disvariant,
+       gs_layout    TYPE lvc_s_layo,
+       gs_scol      TYPE lvc_s_scol.
+
+TABLES : EKKO.
+
+----------------------------------------------------------------------------------
+Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 750
